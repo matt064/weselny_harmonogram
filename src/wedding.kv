@@ -1,0 +1,73 @@
+ScreenManagement:
+    HomeScreen:
+    ScheduleScreen:
+
+<HomeScreen>:
+    id: home
+    name: "home"
+    BoxLayout:
+        orientation: "vertical"
+        padding: [10, 50, 10, 10]
+
+        MDLabel:
+            text: "Wedding Preparation App"
+            halign: "center"
+            font_style: "H2"
+            
+            height: self.texture_size[1]
+
+        MDRaisedButton:
+            text: 'Start Planning'
+            size_hint: None, None
+            size: "200dp", "50dp"
+            pos_hint: {"center_x": 0.5}
+            on_release:
+                app.root.current = 'schedule' 
+
+    BoxLayout:
+        orientation: "horizontal"
+        size_hint_y: None
+        height: "50dp"
+        padding: [20, 0]
+
+        MDRaisedButton: 
+            id: login_button
+            text: "Log In"
+            size_hint: 0.5, 1
+            on_release:
+                app.login()
+        
+        MDRaisedButton:
+            id: signup_button
+            text: "Sign Up"
+            size_hint: 0.5, 1
+            on_release: 
+                app.sing_up()
+        
+        MDRaisedButton:
+            id: logout_button
+            text: "Log Out"
+            size_hint: 0.5, 1
+            on_release:
+                app.log_out()
+            opacity: 0 # ukrycie przycisku wylogowania na poczatku
+
+
+<ScheduleScreen>:
+    name: "schedule"
+    BoxLayout:
+        orientation: "vertical"
+        padding: [10, 50, 10, 10]
+
+        MDLabel:
+            text: "Wedding Schedule"
+            halign: "center"
+            font_style: "H2"
+
+        MDRaisedButton:
+            text: "Back to Home"
+            size_hint: None, None
+            size: 200, 50
+            pos_hint: {"center_x": 0.5}
+            on_release:
+                app.root.current = "home"
