@@ -1,6 +1,9 @@
 ScreenManagement:
+    id: screen_manager
     HomeScreen:
     ScheduleScreen:
+    LoginScreen:
+    SignUpScreen:
 
 <HomeScreen>:
     id: home
@@ -42,7 +45,7 @@ ScreenManagement:
             text: "Sign Up"
             size_hint: 0.5, 1
             on_release: 
-                app.sing_up()
+                app.sign_up()
         
         MDRaisedButton:
             id: logout_button
@@ -53,7 +56,68 @@ ScreenManagement:
             opacity: 0 # ukrycie przycisku wylogowania na poczatku
 
 
+<LoginScreen>:
+    name: 'login'
+    BoxLayout: 
+        orientation: 'vertical'
+        padding: [10, 50, 10, 10]
+
+        MDLabel:
+            text: "Log In"
+            halign: "center"
+            font_style: "H2"
+
+        MDTextField:
+            id: login_username
+            hint_text: "Username"
+            size_hint_x: 0.8
+            pos_hint: {"center_x": 0.5}
+            
+        MDTextField:
+            id: login_password
+            hint_text: "Password"
+            password: True
+            size_hint_x: 0.8
+            pos_hint: {"center_x": 0.5}
+
+        MDRaisedButton:
+            text: "Log In"
+            pos_hint: {"center_x": 0.5}
+            on_release:
+                app.login(login_username.text, login_password.text)
+
+<SignUpScreen>:
+    name: "signup"
+    BoxLayout:
+        orientation: "vertical"
+        padding: [10, 50, 10, 10]
+
+        MDLabel:
+            text: "Sign Up"
+            halign: "center"
+            font_style: "H2"
+        
+        MDTextField:
+            id: signup_username
+            hint_text: "Username"
+            size_hint_x: 0.8
+            pos_hint: {"center_x": 0.5}
+
+        MDTextField:
+            id: signup_password
+            hint_text: "Password"
+            password: True
+            size_hint_x: 0.8
+            pos_hint: {"center_x": 0.5}
+        
+        MDRaisedButton:
+            text: "Sign Up"
+            pos_hint: {"center_x": 0.5}
+            on_release:
+                app.sign_up(signup_username.text, signup_password.text)
+
 <ScheduleScreen>:
+    id: schedule
     name: "schedule"
     BoxLayout:
         orientation: "vertical"
