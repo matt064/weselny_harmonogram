@@ -4,117 +4,164 @@ ScreenManagement:
     ScheduleScreen:
     LoginScreen:
     SignUpScreen:
+    AddTaskScreen:
+
 
 <HomeScreen>:
     id: home
     name: "home"
     BoxLayout:
-        orientation: "vertical"
-        padding: [10, 50, 10, 10]
+        orientation: "vertical"  
+        
+        BoxLayout:
+            orientation: "vertical"
+            padding: [10, 50, 10, 10]
 
-        MDLabel:
-            text: "Wedding Preparation App"
-            halign: "center"
-            font_style: "H2"
+            MDLabel:
+                text: "Wedding Preparation App"
+                halign: "center"
+                font_style: "H2"
+                
+                height: self.texture_size[1]
+
+            MDRaisedButton:
+                text: 'Start Planning'
+                size_hint: None, None
+                size: "200dp", "50dp"
+                pos_hint: {"center_x": 0.5}
+                on_release:
+                    app.root.current = 'schedule' 
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "50dp"
+            padding: [20, 0]
+            spacing: '20dp'
+
+            MDRaisedButton: 
+                id: login_button
+                text: "Log In"
+                size_hint: 0.5, 1
+                on_release:
+                    app.root.current = 'login'
             
-            height: self.texture_size[1]
-
-        MDRaisedButton:
-            text: 'Start Planning'
-            size_hint: None, None
-            size: "200dp", "50dp"
-            pos_hint: {"center_x": 0.5}
-            on_release:
-                app.root.current = 'schedule' 
-
-    BoxLayout:
-        orientation: "horizontal"
-        size_hint_y: None
-        height: "50dp"
-        padding: [20, 0]
-
-        MDRaisedButton: 
-            id: login_button
-            text: "Log In"
-            size_hint: 0.5, 1
-            on_release:
-                app.login()
-        
-        MDRaisedButton:
-            id: signup_button
-            text: "Sign Up"
-            size_hint: 0.5, 1
-            on_release: 
-                app.sign_up()
-        
-        MDRaisedButton:
-            id: logout_button
-            text: "Log Out"
-            size_hint: 0.5, 1
-            on_release:
-                app.log_out()
-            opacity: 0 # ukrycie przycisku wylogowania na poczatku
+            MDRaisedButton:
+                id: signup_button
+                text: "Sign Up"
+                size_hint: 0.5, 1
+                on_release: 
+                    app.root.current = 'signup'
+            
+            MDRaisedButton:
+                id: logout_button
+                text: "Log Out"
+                size_hint: 0.5, 1
+                on_release:
+                    app.log_out()
+                opacity: 0 # ukrycie przycisku wylogowania na poczatku
 
 
 <LoginScreen>:
     name: 'login'
-    BoxLayout: 
+    BoxLayout:
         orientation: 'vertical'
-        padding: [10, 50, 10, 10]
+        padding: 20
+        
+        BoxLayout: 
+            orientation: 'vertical'
+            padding: [10, 50, 10, 10]
 
-        MDLabel:
-            text: "Log In"
-            halign: "center"
-            font_style: "H2"
+            MDLabel:
+                text: "Log In"
+                halign: "center"
+                font_style: "H2"
 
-        MDTextField:
-            id: login_username
-            hint_text: "Username"
-            size_hint_x: 0.8
-            pos_hint: {"center_x": 0.5}
-            
-        MDTextField:
-            id: login_password
-            hint_text: "Password"
-            password: True
-            size_hint_x: 0.8
-            pos_hint: {"center_x": 0.5}
+            MDTextField:
+                id: login_username
+                hint_text: "Username"
+                size_hint_x: 0.8
+                pos_hint: {"center_x": 0.5}
+                
+            MDTextField:
+                id: login_password
+                hint_text: "Password"
+                password: True
+                size_hint_x: 0.8
+                pos_hint: {"center_x": 0.5}
 
-        MDRaisedButton:
-            text: "Log In"
-            pos_hint: {"center_x": 0.5}
-            on_release:
-                app.login(login_username.text, login_password.text)
+        BoxLayout:
+            orientation:'horizontal'
+            padding: [10, 0]
+            height: '50dp'
+            spacing: '10dp'
+
+            MDRaisedButton:
+                text: "Log In"
+                pos_hint: {"center_x": 0.5}
+                size_hint_x: 0.4
+                on_release:
+                    app.login(login_username.text, login_password.text)
+
+            MDRaisedButton:
+                text: "Back"
+                pos_hint: {"center_x": 0.5}
+                size_hint_x: 0.4 
+                on_release:  
+                    app.root.current = 'home'
+
 
 <SignUpScreen>:
     name: "signup"
-    BoxLayout:
+    BoxLayout:  
         orientation: "vertical"
-        padding: [10, 50, 10, 10]
+        padding: 20
+        BoxLayout:
+            orientation: "vertical"
+            padding: [10, 50, 10, 10]
 
-        MDLabel:
-            text: "Sign Up"
-            halign: "center"
-            font_style: "H2"
-        
-        MDTextField:
-            id: signup_username
-            hint_text: "Username"
-            size_hint_x: 0.8
-            pos_hint: {"center_x": 0.5}
+            MDLabel:
+                text: "Sign Up"
+                halign: "center"
+                font_style: "H2"
+            
+            MDTextField:
+                id: signup_username
+                hint_text: "Username"
+                size_hint_x: 0.8
+                pos_hint: {"center_x": 0.5}
 
-        MDTextField:
-            id: signup_password
-            hint_text: "Password"
-            password: True
-            size_hint_x: 0.8
-            pos_hint: {"center_x": 0.5}
+            MDTextField:
+                id: signup_password
+                hint_text: "Password"
+                password: True
+                size_hint_x: 0.8
+                pos_hint: {"center_x": 0.5}
+            
+        Widget:
+            size_hint_y: 0.4
         
-        MDRaisedButton:
-            text: "Sign Up"
-            pos_hint: {"center_x": 0.5}
-            on_release:
-                app.sign_up(signup_username.text, signup_password.text)
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "50dp" 
+            spacing: "10dp"
+            padding: [10, 0]
+            
+            MDRaisedButton:
+                text: "Sign Up"
+                pos_hint: {"center_x": 0.5}
+                size_hint_x: 0.4
+                on_release:
+                    app.sign_up(signup_username.text, signup_password.text)
+
+            MDRaisedButton:
+                text: "Back"
+                pos_hint: {"center_x": 0.5}
+                size_hint_x: 0.4
+                on_release: 
+                    app.root.current = 'home'
+
 
 <ScheduleScreen>:
     id: schedule
@@ -124,14 +171,69 @@ ScreenManagement:
         padding: [10, 50, 10, 10]
 
         MDLabel:
-            text: "Wedding Schedule"
+            text: "Wedding Tasks"
             halign: "center"
             font_style: "H2"
 
-        MDRaisedButton:
-            text: "Back to Home"
-            size_hint: None, None
-            size: 200, 50
+
+        ScrollView:
+            MDList:
+                id: task_list
+                spacing: "10dp"
+
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: "50dp"
+            padding: [10, 0]
+            spacing: "10dp"
+
+            MDRaisedButton:
+                text: "Add Task"
+                on_release:
+                    app.root.current = 'add_task'
+
+
+            MDRaisedButton:
+                text: "Back to Home"
+                size_hint: None, None
+                size: 200, 50
+                pos_hint: {"center_x": 0.5}
+                on_release:
+                    app.root.current = "home"
+
+
+<AddTaskScreen>:
+    name: 'add_task'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [10, 50, 10, 10]
+
+        MDLabel:
+            text: "Add New Task"
+            halign: 'center'
+            font_style: "H2"
+        
+        MDTextField: 
+            id: new_task_input
+            hint_text: "Enter task name"
+            size_hint_x: 0.8
             pos_hint: {"center_x": 0.5}
-            on_release:
-                app.root.current = "home"
+
+        BoxLayout:
+            orientation: "horizontal"
+            padding: [20, 20]
+            spacing: "10dp"
+
+            MDRaisedButton:
+                text: "Add Task"
+                on_release:
+                    app.add_task(new_task_input.text)
+                    new_task_input.text = '' # czysci pole tekstowe
+
+            MDRaisedButton:
+                text: "Back"
+                on_release:
+                    app.root.current = 'schedule'
+    
+                

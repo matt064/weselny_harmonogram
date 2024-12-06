@@ -4,6 +4,9 @@ from kivy.uix.widget import Widget
 from kivymd.app import MDApp
 from kivymd.uix.label import MDLabel
 from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivymd.uix.selectioncontrol import MDCheckbox
+
 import sqlite3
 import hashlib
 
@@ -20,22 +23,36 @@ def initialize_database():
     conn.commit()
     conn.close()
 
+
+
 class MainWidget(Widget):
     pass
+
 
 # stworzenie ekranu głownego
 class HomeScreen(Screen):
     pass
 
+
+# tworzenie ekranu logowania
 class LoginScreen(Screen):
     pass
 
+
+# tworzenie ekranu rejestracji
 class SignUpScreen(Screen):
     pass
+
 
 # stworzenie ekranu harmonogramu
 class ScheduleScreen(Screen):
     pass
+
+
+# dodanie nowego zadania
+class AddTaskScreen(Screen):
+    pass
+
 
 # tworzenie managera ekranow
 class ScreenManagement(ScreenManager):
@@ -47,18 +64,83 @@ class ScreenManagement(ScreenManager):
 class WeddingApp(MDApp):
     is_logged_in = False
 
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.tasks = [
+            {"name": "Znalezienie DJ", 'completed': False},
+            {"name": "Ogarniecie fotografa", "completed": False},
+            {"name": "Kupienie alkoholu", "completed": False}
+        ]
+
+
+    def toggle_task(self, task_name):
+        for task in self.tasks:
+            if task['name'] == task_name:
+                task['completed'] = not task['completed']
+                return
+
+
     def build(self):
         initialize_database()
-        # wczytanie pliku .kv
-        return Builder.load_file('wedding.kv')
+        # wczytanie pliku .kv tylko jeden raz
+        if not hasattr(self, '_kv_loaded'):
+            Builder.load_file('wedding.kv')
+            self._kv_loaded = True
+        return self.root
     
+
     def hash_password(self, password):
         return hashlib.sha256(password.encode()).hexdigest()
     
+
     def on_start(self):
         self.update_login_buttons()
+        self.update_task_list()
+
+
+    def update_task_list(self):
+        schedule_screen = self.root.get_screen('schedule')
+        task_list = schedule_screen.ids.task_list
+
+        # usuwa istniejace elementy z listy zadan
+        task_list.clear_widgets()
+
+        for task in self.tasks:
+            # poziomy boxlayout dla kozdego zadania
+            task_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height='50dp')
+
+            # checkbox
+            checkbox = MDCheckbox(
+                active = task['completed'],
+                on_active = lambda x, task_name=task['name']: self.toogle_task(task_name)
+            )
+
+            # etykieta z nazwa zadania
+            label = MDLabel(text = task['name'], size_hint_x=0.8)
+
+            # dodanie etykiet do layout zadania
+            task_layout.add_widget(checkbox)
+            task_layout.add_widget(label)
+
+            # dodanie laout do listy
+            task_list.add_widget(task_layout)
+
+
+    def add_task(self, task_name):
+        # dodaje nowe zadanie do listy
+        # usuwa biale znaki
+        task_name = task_name.strip()
+
+        if task_name:
+            new_task = {'name': task_name, 'completed': False}
+            self.tasks.append(new_task)
+            self.update_task_list()
+            self.root.current = 'schedule'
+
 
     def login(self, username, password):
+        # logowanie do aplikacji
         hashed_password = self.hash_password(password)
         conn = sqlite3.connect("wedding_app.db")
         cursor = conn.cursor()
@@ -74,6 +156,7 @@ class WeddingApp(MDApp):
 
     
     def sign_up(self, username, password):
+        # rejestracja uzytkownika
         hashed_password = self.hash_password(password)
         conn = sqlite3.connect("wedding_app.db")
         cursor = conn.cursor()
@@ -90,11 +173,14 @@ class WeddingApp(MDApp):
 
 
     def log_out(self):
+        # wylogowanie
         self.is_logged_in = False
         self.update_login_buttons()
         self.root.current = 'home'
 
+
     def update_login_buttons(self):
+        # akutalizacja przyciskow 
         home_screen = self.root.get_screen('home')
         login_button = home_screen.ids.login_button
         signup_button = home_screen.ids.signup_button
@@ -110,7 +196,8 @@ class WeddingApp(MDApp):
             logout_button.opacity = 0
 
 
-
+            
+            
     
 
 
