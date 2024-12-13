@@ -5,6 +5,7 @@ ScreenManagement:
     LoginScreen:
     SignUpScreen:
     AddTaskScreen:
+    ProfileScreen:
 
 
 <HomeScreen>:
@@ -31,6 +32,13 @@ ScreenManagement:
                 pos_hint: {"center_x": 0.5}
                 on_release:
                     app.root.current = 'schedule' 
+
+            MDRaisedButton:
+                text: 'My Profile'
+                size: "200dp", "50dp"
+                pos_hint: {"center_x": .5}
+                on_release:
+                    app.root.current = 'profile'
 
         BoxLayout:
             orientation: "horizontal"
@@ -236,4 +244,53 @@ ScreenManagement:
                 on_release:
                     app.root.current = 'schedule'
     
+                
+<ProfileScreen>:
+    name: 'profile'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: [10, 50, 10, 10]
+        spacing: "20dp"
+
+        MDLabel:
+            text: "My Profile"
+            halign: 'center'
+            font_style: "H2"
+
+        MDLabel:
+            id: wedding_date_label
+            text: "Wedding date: not choose"
+            halign: 'center'
+
+        MDRaisedButton:
+            text: "Choose wedding date"
+            pos_hint: {"center_x": 0.5}
+            on_release:
+                app.open_date_picker()
+        
+
+        BoxLayout:
+            orientation: 'horizontal'
+            margin: [10, 50, 10, 10]
+            spacing: "20dp"
+
+            MDRaisedButton:
+                text: "My TO-Do Tasks"
+                pos_hint: {"center_x": 0.5}
+                on_release:
+                    app.root.current = 'schedule'
+
+            MDRaisedButton:
+                text: 'Back'
+                size: "200dp", "50dp"
+                pos_hint: {"center_x": .5}
+                on_release:
+                    app.root.current = 'home'
+            
+            MDRaisedButton:
+                text: "Logout"
+                pos_hint: {"center_x": 0.5}
+                on_release:
+                    app.log_out()
+
                 

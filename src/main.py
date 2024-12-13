@@ -6,6 +6,8 @@ from kivymd.uix.label import MDLabel
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.uix.selectioncontrol import MDCheckbox
+from kivymd.uix.pickers import MDDatePicker
+from datetime import datetime
 
 import sqlite3
 import hashlib
@@ -17,9 +19,9 @@ def initialize_database():
     cursor.execute("""CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE NOT NULL,
-        password TEXT
-        )
-    """)
+        password TEXT,
+        wedding_date TEXT DEFAULT NULL
+        )""")
     conn.commit()
     conn.close()
 
@@ -54,6 +56,10 @@ class AddTaskScreen(Screen):
     pass
 
 
+class ProfileScreen(Screen):
+    pass
+
+
 # tworzenie managera ekranow
 class ScreenManagement(ScreenManager):
     pass
@@ -72,6 +78,37 @@ class WeddingApp(MDApp):
             {"name": "Ogarniecie fotografa", "completed": False},
             {"name": "Kupienie alkoholu", "completed": False}
         ]
+        self.current_user = None
+
+
+    def open_date_picker(self):
+        date_dialog = MDDatePicker()
+        date_dialog.bind(on_save = self.set_wedding_date)
+        date_dialog.open()
+
+
+    def save_wedding_date(self):
+        if self.current_user and self.wedding_date:
+            conn = sqlite3.connect("wedding_app.db")
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE users SET wedding_date = ? WHERE username = ?", 
+                (self.wedding_date, self.current_user)
+            )
+            conn.commit()
+            conn.close()
+            print(f"Wedding date saved successfully: {self.wedding_date}")
+
+
+    def set_wedding_date(self, instance, value, date_range):
+        "Wybor daty slubu"
+        formatted_date = value.strftime("%d.%m.%Y")
+        self.wedding_date = formatted_date
+        # aktualizacja etykiety z data na ekranie profilu
+        profile_screen = self.root.get_screen("profile")
+        profile_screen.ids.wedding_date_label.text = f'Wedding date: {formatted_date}'
+
+        self.save_wedding_date()
 
 
     def toggle_task(self, task_name):
@@ -142,14 +179,16 @@ class WeddingApp(MDApp):
     def login(self, username, password):
         # logowanie do aplikacji
         hashed_password = self.hash_password(password)
+        print(f'{hashed_password} takie cos wychodzi z logowania')
         conn = sqlite3.connect("wedding_app.db")
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hashed_password))
-        user = cursor.fetchone()
+        user = cursor.execute("SELECT * FROM users WHERE username = ? AND password = ?", (username, hashed_password))
         conn.close()
         if user:
             self.is_logged_in = True
+            self.current_user = username  #zapamietuje zalogowanego uzytkownika
             self.update_login_buttons()
+            self.root.current = 'profile'
             print("zalogowano pomyslnie")
         else:
             print("Nieprawidłowa nazwa uzytkownika lub haslo")
